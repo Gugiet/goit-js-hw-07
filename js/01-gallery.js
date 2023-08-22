@@ -30,12 +30,22 @@ function selectItem(event) {
     return;
   }
 
-  const selectedImg = `<img src="${event.target.dataset.source}">`;
-
-  const instance = basicLightbox.create(selectedImg);
+  const instance = basicLightbox.create(
+    `<img src="${event.target.dataset.source}">`,
+    {
+      onShow: (instance) => {
+        document.addEventListener("keydown", onEscKeyPress);
+      },
+      onClose: (instance) => {
+        document.removeEventListener("keydown", onEscKeyPress);
+      },
+    }
+  );
   instance.show();
 
-  document.body.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") instance.close();
-  });
+  function onEscKeyPress(event) {
+    if (event.code === "Escape") {
+      instance.close();
+    }
+  }
 }
